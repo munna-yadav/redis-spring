@@ -22,15 +22,11 @@ public class ProjectService {
 
     @Cacheable(value = "projects", key = "#id")
     @Transactional
-    public ResponseEntity<?> getProjectById(Long id){
-        Optional<Projects> optionalProjects = projectsRepository.findById(id);
-        if(optionalProjects.isEmpty()){
-            return ResponseEntity.status(404).body("project with id not found");
-        }
-        Projects project = optionalProjects.get();
-
-        return ResponseEntity.status(200).body(project);
+    public Projects getProjectById(Long id) {
+        return projectsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Project with id " + id + " not found"));
     }
+
 
     @Transactional
     public  ResponseEntity<?> createProject(Projects project){
@@ -39,4 +35,6 @@ public class ProjectService {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
 
     }
+
+    
 }

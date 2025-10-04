@@ -14,10 +14,16 @@ public class ProjectController {
     @Autowired
     ProjectService projectService;
 
-    @GetMapping("/project/{id}")
-    public ResponseEntity<?> getProjectById(@PathVariable Long id){
-        return projectService.getProjectById(id);
+    @GetMapping("projects/{id}")
+    public ResponseEntity<?> getProjectById(@PathVariable Long id) {
+        try {
+            Projects project = projectService.getProjectById(id);
+            return ResponseEntity.ok(project);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
+
 
     @PostMapping("/project")
     public ResponseEntity<?>createProject(@RequestBody Projects project){
