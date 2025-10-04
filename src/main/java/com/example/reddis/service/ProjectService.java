@@ -5,6 +5,7 @@ import com.example.reddis.entity.Projects;
 import com.example.reddis.repository.ProjectsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +37,12 @@ public class ProjectService {
 
     }
 
-    
+    @Transactional
+    @CachePut(value = "projects", key = "#id")
+    public Projects updateProject(Projects project, Long id){
+        Projects ExistingProject = projectsRepository.findById(id).orElseThrow(()-> new RuntimeException("project not found"));
+        Projects updatedProject = projectsRepository.save(project);
+        return updatedProject;
+
+    }
 }

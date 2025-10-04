@@ -30,4 +30,13 @@ public class ProjectController {
         return projectService.createProject(project);
     }
 
+    @PutMapping("/project/{id}")
+    public ResponseEntity<?>updateProject(@PathVariable Long id, Projects project ){
+        try{
+            Projects updatedProject = projectService.updateProject(project,id);
+            return ResponseEntity.ok(updatedProject);
+        } catch (RuntimeException e) {
+            return  ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
 }
